@@ -1,27 +1,34 @@
-import React, { use } from 'react';
-import { Link } from 'react-router';
+import React, { use, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Login = () => {
+  const [error, setError] = useState("");
     const {signIn} = use(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+    // console.log(location);
     const handleLogin = (e) =>{
          e.preventDefault();
          const form = e.target;
         //  console.log(form);
          const email = form.email.value;
          const password = form.password.value;
-         console.log({email, password});
+        //  console.log({email, password});
 
          signIn(email, password)
            .then((userCredential) => {
              // Signed in
              const user = userCredential.user;
-             console.log(user)
+            //  console.log(user)
+             navigate(`${location.state?  location.state : "/"}`)
+
            })
            .catch((error) => {
              const errorCode = error.code;
-             const errorMessage = error.message;
-             alert(errorMessage, errorCode)
+            //  const errorMessage = error.message;
+            //  alert(errorMessage, errorCode)
+            setError(errorCode);
            });
     }
     return (
@@ -40,6 +47,7 @@ const Login = () => {
                   name='email'
                   className="input"
                   placeholder="Enter your email address"
+                  required
                 />
                 {/* password */}
                 <label className="label">Password</label>
@@ -48,10 +56,14 @@ const Login = () => {
                   name='password'
                   className="input"
                   placeholder="Enter your password"
+                  required
                 />
                 <div>
                   <a className="link link-hover">Forgot password?</a>
                 </div>
+                {
+                  error && <p className='text-red-400'>{error}</p>
+                }
                 <button type='submit' className="btn btn-neutral mt-4">Login</button>
                 <p className="flex justify-center py-4 font-semibold">
                   Don’t Have An Account ?{" "}

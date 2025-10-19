@@ -1,23 +1,49 @@
-import React, { use } from 'react';
-import { Link } from 'react-router';
+import React, { use, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Register = () => {
-    const {createUser, setUser} = use(AuthContext);
+    const {createUser, setUser, updateUser} = use(AuthContext);
+    const [error, setError] = useState("");
+ 
+    const navigate = useNavigate();
+
+
     const handleRegister = (e) =>{
+      
        e.preventDefault();
-       console.log(e.target);
+      //  console.log(e.target);
        const form = e.target;
        const name = form.name.value;
+       if(name.length <5){
+        setError("name should be more then 5 character")
+        return;
+       }
+       else{
+        setError("");
+       }
        const photo =form.photo.value;
        const email =form.email.value;
        const password = form.password.value;
-       console.log({ name, photo, email, password });
+      //  console.log({ name, photo, email, password });
        createUser(email, password)
          .then((result) => {
            const user = result.user;
         //    console.log(user);
-        setUser(user);
+        updateUser({
+          displayName: name,
+          photoURL: photo,
+        })
+          .then(() => {
+            setUser({ ...user, displayName: name, photoURL: photo });
+            navigate("/")
+          })
+          .catch((error) => {
+            // An error occurred
+            console.log(error);
+            setError(user);
+          });
+
          })
          .catch((error) => {
         //    const errorCode = error.code;
@@ -43,6 +69,9 @@ const Register = () => {
                   placeholder="Enter your name"
                   required
                 />
+                {
+                  error && <p className='text-x5 text-error'>{error}</p>
+                }
                 {/* photo url */}
                 <label className="label">Photo URL</label>
                 <input
