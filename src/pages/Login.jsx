@@ -1,12 +1,16 @@
-import React, { use, useState } from 'react';
+import React, { use,  useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { AuthContext } from '../provider/AuthProvider';
 
+
+
 const Login = () => {
-  const [error, setError] = useState("");
-    const {signIn} = use(AuthContext);
+  const [error, setError ] = useState("");
+    const { signIn, } = use(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
+    // const emailRef = useRef(null);
+
     // console.log(location);
     const handleLogin = (e) =>{
          e.preventDefault();
@@ -20,7 +24,7 @@ const Login = () => {
            .then((userCredential) => {
              // Signed in
              const user = userCredential.user;
-            //  console.log(user)
+             console.log(user)
              navigate(`${location.state?  location.state : "/"}`)
 
            })
@@ -29,10 +33,32 @@ const Login = () => {
             //  const errorMessage = error.message;
             //  alert(errorMessage, errorCode)
             setError(errorCode);
-           });
+           })    
     }
+    // const handlePassword = () => {
+    //   // console.log("forgot password", emailRef.current)
+    //   const email = emailRef.current.value;
+    //   // console.log("forgot password",email);
+    //   if (!email) {
+    //     alert("Please enter your email first!");
+    //     return;
+    //   }
+    //   forgotPassword(email)
+    //     .then(() => alert("Password reset email sent! Check your inbox."))
+    //     .catch((error) => {
+    //       const errorMessage = error.message;
+    //       alert(errorMessage);
+    //     });
+    // };
+
+    // // forgotPassword(email)
+    // .then(() => alert("Password reset email sent! Check your inbox."))
+    // .catch((err) => alert(err.message));
+    // 
+
+    
     return (
-      <div className="flex justify-center min-h-screen items-center">
+      <div className="flex justify-center min-h-screen items-center ">
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl py-5">
           <h1 className="font-semibold text-2xl text-center">
             Login your account
@@ -44,7 +70,8 @@ const Login = () => {
                 <label className="label">Email address</label>
                 <input
                   type="email"
-                  name='email'
+                  // ref={emailRef}
+                  name="email"
                   className="input"
                   placeholder="Enter your email address"
                   required
@@ -53,18 +80,21 @@ const Login = () => {
                 <label className="label">Password</label>
                 <input
                   type="password"
-                  name='password'
+                  name="password"
                   className="input"
                   placeholder="Enter your password"
                   required
                 />
-                <div>
-                  <a className="link link-hover">Forgot password?</a>
+                <div >
+                 
+                  <Link to="/auth/forgot-password">
+                    <a className="link link-hover">Forgot password?</a>
+                  </Link>
                 </div>
-                {
-                  error && <p className='text-red-400'>{error}</p>
-                }
-                <button type='submit' className="btn btn-neutral mt-4">Login</button>
+                {error && <p className="text-red-400">{error}</p>}
+                <button type="submit" className="btn btn-neutral mt-4">
+                  Login
+                </button>
                 <p className="flex justify-center py-4 font-semibold">
                   Don’t Have An Account ?{" "}
                   <Link className="text-secondary" to="/auth/register">

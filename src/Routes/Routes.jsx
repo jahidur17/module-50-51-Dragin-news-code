@@ -8,6 +8,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import NewsDetails from "../pages/NewsDetails";
 import PrivateRoute from "../provider/PrivateRoute";
 import Loading from "../pages/Loading";
+import ForgotPassword from "../pages/ForgotPassword";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,12 @@ const router = createBrowserRouter([
         element: <Login></Login>,
       },
       {
+        path:"/auth/forgot-password",
+        element:<ForgotPassword/>
+
+      },
+      
+      {
         path: "/auth/register",
         element: <Register></Register>,
       },
@@ -52,7 +59,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/*",
-    element: <h2>Error404</h2>,
+    element: <h2 className="text-red-500">Error404</h2>,
   },
 ]);
 

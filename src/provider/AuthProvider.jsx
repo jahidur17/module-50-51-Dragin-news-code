@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { createContext } from 'react';
 import app from '../firebase/firebase.config';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GithubAuthProvider, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 
 export const AuthContext = createContext();
+
+const provider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
+
 
 
 const auth = getAuth(app);
@@ -27,6 +31,22 @@ const AuthProvider = ({children}) => {
      const updateUser = (updateData) =>{
         return updateProfile(auth.currentUser, updateData)
 
+     };
+
+    //  forgot password
+
+    const forgotPassword = (email) =>{
+        return sendPasswordResetEmail(auth,email);
+    }
+
+    //google login
+     const googleLogin = () =>{
+        return signInWithPopup(auth, provider)
+     }
+
+     //github login
+     const githubLogin = () =>{
+        return signInWithPopup(auth,githubProvider);
      }
 
 
@@ -49,16 +69,19 @@ const AuthProvider = ({children}) => {
     },[])
 
 
-    const authData ={
-        user,
-        setUser,
-        createUser,
-        logOut,
-        signIn,
-        loading,
-        setLoading,
-        updateUser,
-    }
+    const authData = {
+      user,
+      setUser,
+      createUser,
+      logOut,
+      signIn,
+      loading,
+      setLoading,
+      updateUser,
+      forgotPassword,
+      googleLogin,
+      githubLogin,
+    };
     return <AuthContext value={authData}>{children}</AuthContext>;
 };
 
